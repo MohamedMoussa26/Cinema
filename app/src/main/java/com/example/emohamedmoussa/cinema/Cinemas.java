@@ -964,7 +964,6 @@ public class Cinemas extends AppCompatActivity implements View.OnClickListener {
 
 
                 requestQueue.add(stringRequest);
-//                mohamed
             }
 
 
