@@ -1,10 +1,12 @@
 package com.example.emohamedmoussa.cinema;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -932,11 +934,40 @@ public class Cinemas extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    public void createList(ArrayList<cinPlace> cinPlaces) {
+    public void createList(final ArrayList<cinPlace> cinPlaces) {
 
         ListView listView = (ListView) findViewById(R.id.cinemaslist);
         cinAdapter cinAdapter = new cinAdapter(cinPlaces, getApplicationContext());
         listView.setAdapter(cinAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Toast.makeText(getApplicationContext(), "" + position, Toast.LENGTH_LONG).show();
+                String url = "https://maps.googleapis.com/maps/api/directions/json?origin=30.06236232989272,31.22096242989272&destination=30.16577822989272,31.55833552989272&key=AIzaSyCkcxUa8VMUJxbkRYKpauQjaYCGcsZt-yI";
+                RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+                StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+                        Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
+                                Uri.parse("http://maps.google.com/maps?daddr=" + cinPlaces.get(position).lat + "," + cinPlaces.get(position).lng));
+                        startActivity(intent);
+                        Log.e("mohamed direction", "" + response);
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(getApplicationContext(), "sorry connection failed", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                requestQueue.add(stringRequest);
+            }
+
+
+        });
     }
 
 
@@ -947,8 +978,8 @@ public class Cinemas extends AppCompatActivity implements View.OnClickListener {
         StringRequest stringRequest = new StringRequest(url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-
                 Log.e("mousaaaaaaa", "" + response);
+
                 Cinemas(response);
 
 
@@ -972,7 +1003,7 @@ public class Cinemas extends AppCompatActivity implements View.OnClickListener {
                 getjsonbyurl();
                 break;
             case R.id.locs:
-                startActivity(new Intent(getApplicationContext(), MapsActivity.class).putParcelableArrayListExtra("cinemas",cinPlaces));
+                startActivity(new Intent(getApplicationContext(), MapsActivity.class).putParcelableArrayListExtra("cinemas", cinPlaces));
                 break;
             case R.id.home2:
                 startActivity(new Intent(getApplicationContext(), moviesShow.class));
