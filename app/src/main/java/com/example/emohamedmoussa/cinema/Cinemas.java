@@ -949,6 +949,9 @@ public class Cinemas extends AppCompatActivity implements View.OnClickListener {
                     @Override
                     public void onResponse(String response) {
 
+//                        https://maps.googleapis.com/maps/api/directions/json?origin=30.06236232989272,31.22096242989272&destination=30.16577822989272,31.55833552989272&key=AIzaSyCkcxUa8VMUJxbkRYKpauQjaYCGcsZt-yI
+//                        here using the api but it needs paying
+                        
                         Intent intent = new Intent(android.content.Intent.ACTION_VIEW,
                                 Uri.parse("http://maps.google.com/maps?daddr=" + cinPlaces.get(position).lat + "," + cinPlaces.get(position).lng));
                         startActivity(intent);
